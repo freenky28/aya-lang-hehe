@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Request 💗</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Georgia, serif;
+    background: linear-gradient(135deg, #f9e9f1, #fff7fa);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #a34066;
+    overflow: hidden;
+}
+
+.container {
+    width: 90%;
+    max-width: 480px;
+}
+
+.card {
+    background: rgba(255,255,255,0.92);
+    padding: 35px 25px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(120,70,90,0.18);
+    animation: fade .6s ease;
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+h1 {
+    font-size: 31px;
+    line-height: 1.35;
+    font-weight: normal;
+    margin-bottom: 30px;
+}
+
+h2 {
+    font-size: 29px;
+    line-height: 1.3;
+    font-weight: normal;
+    margin-bottom: 25px;
+}
+
+.yes-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 30px;
+    background: #c83e72;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    margin-bottom: 25px;
+}
+
+.yes-btn:hover {
+    transform: scale(1.03);
+}
+
+.no-btn {
+    border: none;
+    background: transparent;
+    color: #555;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.label {
+    display: block;
+    text-align: left;
+    color: #666;
+    font-family: Arial, sans-serif;
+    margin-bottom: 8px;
+}
+
+.date-input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 16px;
+    margin-bottom: 22px;
+}
+
+.times {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+}
+
+.time-btn {
+    padding: 11px 4px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: white;
+    color: #555;
+    cursor: pointer;
+}
+
+.time-btn.selected {
+    background: #c83e72;
+    color: white;
+    border-color: #c83e72;
+}
+
+.next-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 25px;
+    background: #f5eaf0;
+    color: #a34066;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 25px;
+}
+
+.food-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.food {
+    padding: 18px 10px;
+    background: white;
+    border: 2px solid #eee;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.food:hover {
+    transform: translateY(-3px);
+}
+
+.food.selected {
+    border-color: #c83e72;
+    background: #fff0f5;
+}
+
+.food-icon {
+    display: block;
+    font-size: 37px;
+    margin-bottom: 7px;
+}
+
+.food-name {
+    font-family: Arial, sans-serif;
+    color: #444;
+    font-size: 14px;
+}
+
+.final-title {
+    font-size: 43px;
+    margin-bottom: 25px;
+}
+
+.details {
+    background: white;
+    padding: 18px;
+    border-radius: 15px;
+    text-align: left;
+    font-family: Arial, sans-serif;
+}
+
+.detail {
+    padding: 10px 0;
+    font-size: 17px;
+}
+
+.message {
+    font-size: 22px;
+    margin-top: 28px;
+}
+
+.small-text {
+    margin-top: 25px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #888;
+    font-style: italic;
+}
+
+.heart {
+    position: fixed;
+    bottom: -30px;
+    font-size: 25px;
+    animation: heartUp 4s linear forwards;
+    pointer-events: none;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes heartUp {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-110vh);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- PAGE 1 -->
+    <div class="card screen active" id="screen1">
+
+        <h1>
+            🌸 Will you go on a<br>
+            date with me? 🌸
+        </h1>
+
+        <button class="yes-btn" onclick="goDate()">
+            YES ♥
+        </button>
+
+        <button class="no-btn" id="noBtn">
+            NO 🥺
+        </button>
+
+    </div>
+
+    <!-- PAGE 2 -->
+    <div class="card screen" id="screen2">
+
+        <h2>
+            So... when are you<br>
+            free? 📅🐾
+        </h2>
+
+        <label class="label">Pick a day</label>
+
+        <input
+            type="date"
+            id="date"
+            class="date-input"
+        >
+
+        <label class="label">What time?</label>
+
+        <div class="times">
+
+            <button class="time-btn" onclick="selectTime(this)">12:00 PM</button>
+            <button class="time-btn" onclick="selectTime(this)">1:00 PM</button>
+            <button class="time-btn" onclick="selectTime(this)">2:00 PM</button>
+            <button class="time-btn" onclick="selectTime(this)">3:00 PM</button>
+            <button class="time-btn" onclick="selectTime(this)">4:00 PM</button>
+            <button class="time-btn" onclick="selectTime(this)">5:00 PM</button>
+            <button class="time-btn" onclick="selectTime(this)">6:00 PM</button>
+            <button class="time-btn" onclick="selectTime(this)">6:30 PM</button>
+            <button class="time-btn" onclick="selectTime(this)">7:00 PM</button>
+            <button class="time-btn" onclick="selectTime(this)">7:30 PM</button>
+            <button class="time-btn" onclick="selectTime(this)">8:00 PM</button>
+            <button class="time-btn" onclick="selectTime(this)">8:30 PM</button>
+
+        </div>
+
+        <button class="next-btn" onclick="goFood()">
+            Set the date ❤️
+        </button>
+
+    </div>
+
+    <!-- PAGE 3 -->
+    <div class="card screen" id="screen3">
+
+        <h2>
+            Asa ta? 🍽️✨
+        </h2>
+
+        <div class="food-grid">
+
+            <div class="food" onclick="selectFood(this,'Jollibee')">
+                <span class="food-icon">🍗</span>
+                <span class="food-name">Jollibee</span>
+            </div>
+
+            <div class="food" onclick="selectFood(this,'Bazaar')">
+                <span class="food-icon">🛍️</span>
+                <span class="food-name">Bazaar</span>
+            </div>
+
+            <div class="food" onclick="selectFood(this,'Kusina sa Danao')">
+                <span class="food-icon">🍽️</span>
+                <span class="food-name">Kusina sa Danao</span>
+            </div>
+
+            <div class="food" onclick="selectFood(this,'Street Food')">
+                <span class="food-icon">🌭</span>
+                <span class="food-name">Street Food</span>
+            </div>
+
+            <div class="food" onclick="selectFood(this,'Takoyaki')">
+                <span class="food-icon">🐙</span>
+                <span class="food-name">Takoyaki</span>
+            </div>
+
+            <div class="food" onclick="selectFood(this,'Quik² Tempura & Fish Ball')">
+                <span class="food-icon">🍢</span>
+                <span class="food-name">Quik² Tempura & Fish Ball</span>
+            </div>
+
+        </div>
+
+        <button class="next-btn" onclick="finishDate()">
+            Next 💕
+        </button>
+
+    </div>
+
+    <!-- PAGE 4 -->
+    <div class="card screen" id="screen4">
+
+        <div class="final-title">
+            YAY!! 💕
+        </div>
+
+        <div class="details">
+
+            <div class="detail">
+                📅 <strong id="finalDate"></strong>
+            </div>
+
+            <div class="detail">
+                ⏰ <strong id="finalTime"></strong>
+            </div>
+
+            <div class="detail">
+                🍽️ <strong id="finalFood"></strong>
+            </div>
+
+        </div>
+
+        <div class="message">
+            I can't wait to see you! 🌷✨
+        </div>
+
+        <div class="small-text">
+            I made a whole website just for our date hehe 💗
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let selectedTime = "";
+let selectedFood = "";
+
+/* YES BUTTON */
+
+function goDate() {
+    showScreen("screen2");
+    hearts();
+}
+
+
+/* NO BUTTON */
+
+const noBtn = document.getElementById("noBtn");
+
+function moveNo() {
+
+    const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+    const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+
+    const x = Math.random() * Math.max(maxX, 20);
+    const y = Math.random() * Math.max(maxY, 20);
+
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+}
+
+noBtn.addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    moveNo();
+});
+
+noBtn.addEventListener("mouseenter", function() {
+    moveNo();
+});
+
+noBtn.addEventListener("click", function(e) {
+    e.preventDefault();
+    moveNo();
+});
+
+
+/* SCREEN CHANGE */
+
+function showScreen(id) {
+
+    document.querySelectorAll(".screen").forEach(function(screen) {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+}
+
+
+/* TIME */
+
+function selectTime(button) {
+
+    document.querySelectorAll(".time-btn").forEach(function(btn) {
+        btn.classList.remove("selected");
+    });
+
+    button.classList.add("selected");
+
+    selectedTime = button.innerText;
+}
+
+
+/* DATE */
+
+function goFood() {
+
+    const date = document.getElementById("date").value;
+
+    if (date === "") {
+        alert("Please pick a date first 💗");
+        return;
+    }
+
+    if (selectedTime === "") {
+        alert("Please choose a time first 🥺");
+        return;
+    }
+
+    showScreen("screen3");
+}
+
+
+/* FOOD */
+
+function selectFood(element, food) {
+
+    document.querySelectorAll(".food").forEach(function(item) {
+        item.classList.remove("selected");
+    });
+
+    element.classList.add("selected");
+
+    selectedFood = food;
+}
+
+
+/* FINAL PAGE */
+
+function finishDate() {
+
+    if (selectedFood === "") {
+        alert("Please choose where we will go 🍽️💕");
+        return;
+    }
+
+    const dateValue = document.getElementById("date").value;
+
+    const dateObject = new Date(dateValue + "T00:00:00");
+
+    const options = {
+        weekday: "long",
+        month: "long",
+        day: "numeric"
+    };
+
+    const formattedDate =
+        dateObject.toLocaleDateString("en-US", options);
+
+    document.getElementById("finalDate").innerText =
+        formattedDate;
+
+    document.getElementById("finalTime").innerText =
+        selectedTime;
+
+    document.getElementById("finalFood").innerText =
+        selectedFood;
+
+    showScreen("screen4");
+
+    hearts();
+    hearts();
+}
+
+
+/* HEARTS */
+
+function hearts() {
+
+    for (let i = 0; i < 12; i++) {
+
+        const heart = document.createElement("div");
+
+        heart.className = "heart";
+
+        heart.innerText =
+            Math.random() > 0.5 ? "💗" : "💕";
+
+        heart.style.left =
+            Math.random() * 100 + "vw";
+
+        heart.style.animationDuration =
+            (3 + Math.random() * 3) + "s";
+
+        document.body.appendChild(heart);
+
+        setTimeout(function() {
+            heart.remove();
+        }, 6000);
+    }
+}
+
+</script>
+
+</body>
+</html>
